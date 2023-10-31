@@ -11,24 +11,25 @@ export default class PdfService {
   async readFile() {
     try {
       const pdfDoc = await PDFDocument.load(this.fileBuffer);
-      const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+      const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
       for (const page of pdfDoc.getPages()) {
-        const { height } = page.getSize();
-        const fontSize = 30;
-        page.drawText('HOLA MUNDO', {
-          x: 50,
-          y: height - 4 * fontSize,
+        const { width, height } = page.getSize();
+        const fontSize = 15;
+        const text = 'Pagina n de n';
+        const textWidth = font.widthOfTextAtSize(text, fontSize);
+
+        page.drawText(text, {
+          x: (width - textWidth) / 2,
+          y: 4,
           size: fontSize,
-          font: timesRomanFont,
+          font: font,
           color: rgb(0, 0.53, 0.71),
         });
 
         const pdfBytes = await pdfDoc.save();
 
         return pdfBytes;
-
-        console.log('PDF modificado guardado con éxito.');
       }
     } catch (error) {
       console.log(error);
