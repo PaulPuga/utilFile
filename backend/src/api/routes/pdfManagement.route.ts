@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import uploadFile from '../middlewares/uploadFile';
-import pdfManagmentController from '../controllers/pdfManagment.controller';
+import pdfManagementController from '../controllers/pdfManagement.controller';
 const route = Router();
 
 export default (app: Router) => {
-  app.use('/pdf-managment', route);
+  app.use('/pdf-management', route);
 
   /**
    * ADD PAGE NUMBER IN MULTIPLE PDF FILES CONSECUTIVELY
@@ -12,6 +12,6 @@ export default (app: Router) => {
   route.post(
     '/pdfs-page-number',
     uploadFile.array('files', 10),
-    pdfManagmentController.addPdfsPageNumber,
+    pdfManagementController.addPdfsPageNumber,
   );
 };

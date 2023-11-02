@@ -20,7 +20,7 @@ type PdfFileDetails = {
   totalPages: number;
 };
 
-class PdfManagmentService {
+class PdfManagementService {
   constructor() {}
 
   private calculateTextPosition(
@@ -175,4 +175,4 @@ class PdfManagmentService {
   }
 }
 
-export default PdfManagmentService;
+export default PdfManagementService;

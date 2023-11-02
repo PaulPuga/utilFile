@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import pdfManagmentRouter from './routes/pdfManagment.route';
+import pdfManagementRouter from './routes/pdfManagement.route';
 
 export default () => {
   const app = Router();
-  pdfManagmentRouter(app);
+  pdfManagementRouter(app);
 
   return app;
 };
