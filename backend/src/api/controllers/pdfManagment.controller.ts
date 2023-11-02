@@ -25,7 +25,7 @@ const addPdfsPageNumber = async (req: Request, res: Response) => {
     const zipPdfs = await pdfManagment.zipPdfs(pdfsWithPageNumber);
 
     res.setHeader('Content-Type', 'application/zip');
-    res.setHeader('Content-Disposition', 'attachment; filename=archivos.zip');
+    res.setHeader('Content-Disposition', 'attachment; filename=pdf_with_page_num.zip');
     res.send(zipPdfs);
   } catch (error) {
     res.status(500).send('Error to add page in pdfs');
