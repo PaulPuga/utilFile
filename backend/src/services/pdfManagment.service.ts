@@ -94,6 +94,7 @@ class PdfManagmentService {
   }> {
     try {
       const textFont = StandardFonts.Helvetica;
+      const textColor = rgb(1, 0, 0);
       const fontSize = 15;
 
       const pdfDoc = await PDFDocument.load(data.buffer);
@@ -122,7 +123,7 @@ class PdfManagmentService {
           y,
           size: fontSize,
           font: font,
-          color: rgb(0, 0.53, 0.71),
+          color: textColor,
         });
         currentPage++;
       }

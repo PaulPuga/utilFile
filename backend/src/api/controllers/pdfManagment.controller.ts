@@ -20,7 +20,7 @@ const addPdfsPageNumber = async (req: Request, res: Response) => {
 
     const pdfsWithPageNumber = await pdfManagment.addPageNumbersToPdfs(
       pdfBufferData,
-      { position: req.body.position as DOC_POSITION, startPageNumber: 1 },
+      { position: req.body.textPosition as DOC_POSITION, startPageNumber: 1 },
     );
     const zipPdfs = await pdfManagment.zipPdfs(pdfsWithPageNumber);
 
