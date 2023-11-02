@@ -11,6 +11,7 @@ export type PdfBufferData = {
 type PageNumberingOptions = {
   startPageNumber: number;
   position: DOC_POSITION;
+  totalPages?: number;
 };
 
 type PdfFileDetails = {
@@ -67,10 +68,21 @@ class PdfManagmentService {
     return { x, y };
   }
 
-  /**
-   * @TODO Create method to count the pages of any pdf file in an array and return the number
-   */
-  private async getPdfsTotalPages() {}
+  private async calculatePdfsTotalPages(
+    data: PdfBufferData[],
+  ): Promise<number> {
+    try {
+      let totalPdfsPages = 0;
+      for (const pdfBufferData of data) {
+        totalPdfsPages += (
+          await PDFDocument.load(pdfBufferData.buffer)
+        ).getPageCount();
+      }
+      return totalPdfsPages;
+    } catch (error) {
+      throw new Error('Error traying to couant pdfs total pages');
+    }
+  }
 
   public async addPageNumbersToPdf(
     data: PdfBufferData,
@@ -87,7 +99,8 @@ class PdfManagmentService {
       const pdfDoc = await PDFDocument.load(data.buffer);
       const font = await pdfDoc.embedFont(textFont);
       const pdfPages = pdfDoc.getPages();
-      const lastPageNumber = options.startPageNumber - 1 + pdfPages.length;
+      const lastPageNumber =
+        options.totalPages ?? options.startPageNumber - 1 + pdfPages.length;
 
       let currentPage = options.startPageNumber;
 
@@ -130,20 +143,19 @@ class PdfManagmentService {
     options: PageNumberingOptions,
   ) {
     try {
+      options.totalPages = await this.calculatePdfsTotalPages(data);
       const pdfFilesWithPageNumbers: PdfFileDetails[] = [];
-
-      let pageNumber = options.startPageNumber;
 
       for (const pdfBufferData of data) {
         const pdfFileWithPageNum: PdfFileDetails =
           await this.addPageNumbersToPdf(pdfBufferData, options);
 
-        pageNumber = pageNumber + pdfFileWithPageNum.totalPages;
+        options.startPageNumber += pdfFileWithPageNum.totalPages;
         pdfFilesWithPageNumbers.push(pdfFileWithPageNum);
       }
       return pdfFilesWithPageNumbers;
     } catch (error) {
-      throw new Error('Error adding page number in PDFs');
+      throw new Error('Error adding page number in Pdfs');
     }
   }
 
