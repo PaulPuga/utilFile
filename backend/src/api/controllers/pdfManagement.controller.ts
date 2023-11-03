@@ -1,15 +1,20 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
+import boom from '@hapi/boom';
+
 import PdfManagementService, {
   PdfBufferData,
 } from '../../services/pdfManagement.service';
 import { DOC_POSITION } from '../../types/enums';
 
-const addPdfsPageNumber = async (req: Request, res: Response) => {
+const addPdfsPageNumber = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const files = req.files as Express.Multer.File[];
 
-    if (!files || files.length === 0)
-      return res.status(400).send('Files not found.');
+    if (!files || files.length === 0) throw boom.badRequest('Files not found.');
 
     const pdfBufferData: PdfBufferData[] = files.map((file) => ({
       buffer: file.buffer,
@@ -31,7 +36,7 @@ const addPdfsPageNumber = async (req: Request, res: Response) => {
     );
     res.send(zipPdfs);
   } catch (error) {
-    res.status(500).send('Error to add page in pdfs');
+    next(error);
   }
 };
 

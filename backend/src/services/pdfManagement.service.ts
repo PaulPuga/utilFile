@@ -71,17 +71,17 @@ class PdfManagementService {
   private async calculatePdfsTotalPages(
     data: PdfBufferData[],
   ): Promise<number> {
-    try {
-      let totalPdfsPages = 0;
-      for (const pdfBufferData of data) {
-        totalPdfsPages += (
-          await PDFDocument.load(pdfBufferData.buffer)
-        ).getPageCount();
-      }
-      return totalPdfsPages;
-    } catch (error) {
-      throw new Error('Error traying to couant pdfs total pages');
+    // try {
+    let totalPdfsPages = 0;
+    for (const pdfBufferData of data) {
+      totalPdfsPages += (
+        await PDFDocument.load(pdfBufferData.buffer)
+      ).getPageCount();
     }
+    return totalPdfsPages;
+    // } catch (error) {
+    //   throw new Error('Error traying to couant pdfs total pages');
+    // }
   }
 
   public async addPageNumbersToPdf(
@@ -92,86 +92,76 @@ class PdfManagementService {
     totalPages: number;
     filename: string;
   }> {
-    try {
-      const textFont = StandardFonts.Helvetica;
-      const textColor = rgb(1, 0, 0);
-      const fontSize = 15;
+    const textFont = StandardFonts.Helvetica;
+    const textColor = rgb(1, 0, 0);
+    const fontSize = 15;
 
-      const pdfDoc = await PDFDocument.load(data.buffer);
-      const font = await pdfDoc.embedFont(textFont);
-      const pdfPages = pdfDoc.getPages();
-      const lastPageNumber =
-        options.totalPages ?? options.startPageNumber - 1 + pdfPages.length;
+    const pdfDoc = await PDFDocument.load(data.buffer);
+    const font = await pdfDoc.embedFont(textFont);
+    const pdfPages = pdfDoc.getPages();
+    const lastPageNumber =
+      options.totalPages ?? options.startPageNumber - 1 + pdfPages.length;
 
-      let currentPage = options.startPageNumber;
+    let currentPage = options.startPageNumber;
 
-      for (const page of pdfPages) {
-        const pageWidth = page.getSize().width;
-        const pageHeight = page.getSize().height;
-        const paginationText = `Página ${currentPage} de ${lastPageNumber}`;
-        const textWidth = font.widthOfTextAtSize(paginationText, fontSize);
+    for (const page of pdfPages) {
+      const pageWidth = page.getSize().width;
+      const pageHeight = page.getSize().height;
+      const paginationText = `Página ${currentPage} de ${lastPageNumber}`;
+      const textWidth = font.widthOfTextAtSize(paginationText, fontSize);
 
-        const { x, y } = this.calculateTextPosition(
-          options.position,
-          pageHeight,
-          pageWidth,
-          textWidth,
-        );
+      const { x, y } = this.calculateTextPosition(
+        options.position,
+        pageHeight,
+        pageWidth,
+        textWidth,
+      );
 
-        page.drawText(paginationText, {
-          x,
-          y,
-          size: fontSize,
-          font: font,
-          color: textColor,
-        });
-        currentPage++;
-      }
-      const pdfBytes = await pdfDoc.save();
-
-      return {
-        buffer: pdfBytes,
-        totalPages: pdfDoc.getPageCount(),
-        filename: data.filename,
-      };
-    } catch (error) {
-      throw new Error('Error adding page number in PDF');
+      page.drawText(paginationText, {
+        x,
+        y,
+        size: fontSize,
+        font: font,
+        color: textColor,
+      });
+      currentPage++;
     }
+    const pdfBytes = await pdfDoc.save();
+
+    return {
+      buffer: pdfBytes,
+      totalPages: pdfDoc.getPageCount(),
+      filename: data.filename,
+    };
   }
 
   public async addPageNumbersToPdfs(
     data: PdfBufferData[],
     options: PageNumberingOptions,
   ) {
-    try {
-      options.totalPages = await this.calculatePdfsTotalPages(data);
-      const pdfFilesWithPageNumbers: PdfFileDetails[] = [];
+    options.totalPages = await this.calculatePdfsTotalPages(data);
+    const pdfFilesWithPageNumbers: PdfFileDetails[] = [];
 
-      for (const pdfBufferData of data) {
-        const pdfFileWithPageNum: PdfFileDetails =
-          await this.addPageNumbersToPdf(pdfBufferData, options);
+    for (const pdfBufferData of data) {
+      const pdfFileWithPageNum: PdfFileDetails = await this.addPageNumbersToPdf(
+        pdfBufferData,
+        options,
+      );
 
-        options.startPageNumber += pdfFileWithPageNum.totalPages;
-        pdfFilesWithPageNumbers.push(pdfFileWithPageNum);
-      }
-      return pdfFilesWithPageNumbers;
-    } catch (error) {
-      throw new Error('Error adding page number in Pdfs');
+      options.startPageNumber += pdfFileWithPageNum.totalPages;
+      pdfFilesWithPageNumbers.push(pdfFileWithPageNum);
     }
+    return pdfFilesWithPageNumbers;
   }
 
   public async zipPdfs(pdfFiles: PdfFileDetails[]): Promise<Buffer> {
-    try {
-      const zip = new JSZip();
+    const zip = new JSZip();
 
-      pdfFiles.forEach((pdfFile, index) => {
-        zip.file(`${pdfFile.filename}_${index}.pdf`, pdfFile.buffer);
-      });
+    pdfFiles.forEach((pdfFile, index) => {
+      zip.file(`${pdfFile.filename}_${index}.pdf`, pdfFile.buffer);
+    });
 
-      return await zip.generateAsync({ type: 'nodebuffer' });
-    } catch (error) {
-      throw new Error('Error trying to zip pdfs');
-    }
+    return await zip.generateAsync({ type: 'nodebuffer' });
   }
 }
 

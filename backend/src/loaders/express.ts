@@ -3,6 +3,11 @@ import morgan from 'morgan';
 import cors from 'cors';
 import config from '../config';
 import routes from '../api';
+import {
+  // logErrors,
+  boomErrorHandler,
+  errorHandler,
+} from '../errors/error.handler';
 
 export default ({ app }: { app: express.Application }) => {
   /**
@@ -29,4 +34,11 @@ export default ({ app }: { app: express.Application }) => {
    * API Router
    */
   app.use(config.api.prefix, routes());
+
+  /**
+   * Errors Handlers
+   */
+  //app.use(logErrors); // TODO: Implement library to handle with logs
+  app.use(boomErrorHandler); // Middleware to handle with the @hapi/boom errors
+  app.use(errorHandler); // Last error handler with 500 response
 };
