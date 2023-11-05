@@ -11,7 +11,7 @@ const upload = multer({
       callback(boom.badRequest('Files must be pdf'));
     }
   },
-  limits: { files: 20 },
+  // limits: { files: config.uploadFiles.pdfFilesUploadLimit },
 });
 
 export default upload;

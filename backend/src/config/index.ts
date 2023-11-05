@@ -27,4 +27,10 @@ export default {
   api: {
     prefix: '/api',
   },
+  /**
+   * upload file configs
+   */
+  uploadFiles: {
+    uploadLimit: 10,
+  },
 };

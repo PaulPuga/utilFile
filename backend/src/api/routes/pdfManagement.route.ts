@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import uploadFile from '../middlewares/uploadPdfFiles';
 import pdfManagementController from '../controllers/pdfManagement.controller';
-import validateUploadPdfFiles from '../validators/uploadPdfFiles.validation';
+import { validateUpdatePdfFiles } from '../validators/pdfManagement.validation';
 const route = Router();
 
 export default (app: Router) => {
@@ -12,8 +12,8 @@ export default (app: Router) => {
    */
   route.post(
     '/pdfs-page-number',
-    uploadFile.array('files', 20),
-    validateUploadPdfFiles,
+    uploadFile.array('files'),
+    validateUpdatePdfFiles,
     pdfManagementController.addPdfsPageNumber,
   );
 };

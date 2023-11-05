@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import config from '../../config';
 
 export const pdfFileSchema = Joi.object({
   fieldname: Joi.string().valid('files').required(),
@@ -15,11 +16,12 @@ export const pdfFileSchema = Joi.object({
 });
 
 export const pdfFilesSchema = Joi.array()
-  .max(10)
+  .max(config.uploadFiles.uploadLimit)
   .items(pdfFileSchema)
   .required();
 
-export const pdfFilesOptionsSchema = Joi.object({
+export const textInsertionOptionsSchema = Joi.object({
+  //change vairable name
   textPosition: Joi.string()
     .valid(
       'TOP_LEFT',
