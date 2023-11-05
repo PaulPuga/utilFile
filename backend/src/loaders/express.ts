@@ -1,13 +1,10 @@
 import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
+import helmet from 'helmet';
 import config from '../config';
 import routes from '../api';
-import {
-  // logErrors,
-  boomErrorHandler,
-  errorHandler,
-} from '../errors/error.handler';
+import { boomErrorHandler, errorHandler } from '../errors/error.handler';
 
 export default ({ app }: { app: express.Application }) => {
   /**
@@ -21,6 +18,7 @@ export default ({ app }: { app: express.Application }) => {
   app.get('/status', (req, res) => {
     res.sendStatus(200);
   });
+
   /**
    * Allows external clients to make HTTP requests to Express application.
    */
@@ -29,6 +27,11 @@ export default ({ app }: { app: express.Application }) => {
    * Using json with express
    */
   app.use(express.json());
+
+  /**
+   * Secure Express apps by setting HTTP response headers.
+   */
+  app.use(helmet());
 
   /**
    * API Router
