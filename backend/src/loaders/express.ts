@@ -4,6 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import config from '../config';
 import routes from '../api';
+import { corsOptions } from '../config/cors.config';
 import { boomErrorHandler, errorHandler } from '../errors/error.handler';
 
 export default ({ app }: { app: express.Application }) => {
@@ -22,7 +23,7 @@ export default ({ app }: { app: express.Application }) => {
   /**
    * Allows external clients to make HTTP requests to Express application.
    */
-  app.use(cors());
+  app.use(cors(corsOptions));
   /**
    * Using json with express
    */
