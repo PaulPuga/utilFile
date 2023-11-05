@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import boom from '@hapi/boom';
+//import boom from '@hapi/boom';
 
 import PdfManagementService, {
   PdfBufferData,
@@ -13,8 +13,8 @@ const addPdfsPageNumber = async (
 ) => {
   try {
     const files = req.files as Express.Multer.File[];
-
-    if (!files || files.length === 0) throw boom.badRequest('Files not found.');
+    const textPosition = req.body.textPosition as DOC_POSITION;
+    const startPageNumber = 1;
 
     const pdfBufferData: PdfBufferData[] = files.map((file) => ({
       buffer: file.buffer,
@@ -25,7 +25,7 @@ const addPdfsPageNumber = async (
 
     const pdfsWithPageNumber = await pdfManagement.addPageNumbersToPdfs(
       pdfBufferData,
-      { position: req.body.textPosition as DOC_POSITION, startPageNumber: 1 },
+      { position: textPosition, startPageNumber },
     );
     const zipPdfs = await pdfManagement.zipPdfs(pdfsWithPageNumber);
 
