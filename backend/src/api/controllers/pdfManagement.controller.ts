@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 //import boom from '@hapi/boom';
 
+import { IPdfFile } from '../../services/PdfFile';
 import PdfManagementService, {
-  PdfBufferData,
+  IAddPageNumToPdfsDTO,
 } from '../../services/pdfManagement.service';
 import { DOC_POSITION } from '../../types/enums';
 
@@ -13,20 +14,25 @@ const addPdfsPageNumber = async (
 ) => {
   try {
     const files = req.files as Express.Multer.File[];
-    const textPosition = req.body.textPosition as DOC_POSITION;
-    const startPageNumber = 1;
 
-    const pdfBufferData: PdfBufferData[] = files.map((file) => ({
-      buffer: file.buffer,
+    const pdfs: IPdfFile[] = files.map((file) => ({
       filename: file.originalname,
+      buffer: file.buffer,
+      mimetype: file.mimetype,
     }));
+
+    const addPageNumToPdfsDTO: IAddPageNumToPdfsDTO = {
+      files: pdfs,
+      textPosition: req.body.textPosition as DOC_POSITION,
+      startPage: Number(req.body.startPage),
+      consecutiveFiles: req.body.consecutiveFiles === 'true',
+    };
 
     const pdfManagement = new PdfManagementService();
 
-    const pdfsWithPageNumber = await pdfManagement.addPageNumbersToPdfs(
-      pdfBufferData,
-      { position: textPosition, startPageNumber },
-    );
+    const pdfsWithPageNumber =
+      await pdfManagement.addPageNumbersToPdfs(addPageNumToPdfsDTO);
+
     const zipPdfs = await pdfManagement.zipPdfs(pdfsWithPageNumber);
 
     res.setHeader('Content-Type', 'application/zip');

@@ -32,5 +32,6 @@ export default {
    */
   uploadFiles: {
     uploadLimit: 10,
+    mbLimitSize: 10,
   },
 };

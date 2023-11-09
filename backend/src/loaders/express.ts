@@ -5,7 +5,11 @@ import helmet from 'helmet';
 import config from '../config';
 import routes from '../api';
 import { corsOptions } from '../config/cors.config';
-import { boomErrorHandler, errorHandler } from '../errors/error.handler';
+import {
+  boomErrorHandler,
+  multerErrorHandler,
+  errorHandler,
+} from '../errors/error.handler';
 
 export default ({ app }: { app: express.Application }) => {
   /**
@@ -43,6 +47,7 @@ export default ({ app }: { app: express.Application }) => {
    * Errors Handlers
    */
   //app.use(logErrors); // TODO: Implement library to handle with logs
+  app.use(multerErrorHandler); // Middleware to handle with the multer errors
   app.use(boomErrorHandler); // Middleware to handle with the @hapi/boom errors
   app.use(errorHandler); // Last error handler with 500 response
 };

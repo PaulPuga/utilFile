@@ -32,4 +32,6 @@ export const textInsertionOptionsSchema = Joi.object({
       'BOTTOM_RIGHT',
     )
     .required(),
+  consecutiveFiles: Joi.boolean().required(),
+  startPage: Joi.number().required(),
 });

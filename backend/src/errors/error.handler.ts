@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import boom from '@hapi/boom';
+import multer from 'multer';
 
 export const logErrors = (
   err: Error,
@@ -7,8 +8,23 @@ export const logErrors = (
   res: Response,
   next: NextFunction,
 ) => {
-  console.log(err);
+  // console.log(err);
   next(err);
+};
+export const multerErrorHandler = (
+  err: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      throw boom.badRequest(err);
+    }
+    return res.status(500).send('Error trying to upload file');
+  } else if (err) {
+    next(err);
+  }
 };
 export const boomErrorHandler = (
   err: Error,
