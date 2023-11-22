@@ -1,0 +1,119 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(12, 1fr);
+  height: 100vh;
+}
+.titleWrapper {
+  grid-area: 1/1/5/4;
+}
+.navWrapper {
+  grid-area: 2/4/1/13;
+  align-self: center;
+}
+.optionsWrapper {
+  grid-area: 2/4/5/13;
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr) auto;
+}
+.optionsColection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  overflow-x: auto;
+  gap: 10px;
+}
+.documentsPreview {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  justify-content: end;
+  margin-right: 20px;
+}
+.filesWrapper {
+  grid-area: 5/1/12/13;
+  background-color: rgb(250, 250, 250);
+}
+.submitButtonWrapper {
+  grid-area: 12/1/13/13;
+  background-color: blanchedalmond;
+}
+
+/* OPTION ================================= */
+
+.optionWrapper {
+  justify-self: center;
+  min-width: 200px;
+}
+.optionWrapper h3 {
+  text-align: center;
+  font-weight: 500;
+}
+.optionInputWrapper {
+  display: flex;
+  justify-content: center;
+}
+
+/* Tablet and Smaller Desktop */
+@media (max-width: 1120px) {
+  .titleWrapper {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 10;
+    background-color: #fff;
+    padding: 5px 0;
+    filter: drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.2));
+  }
+  .container {
+    margin-top: 90px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .navWrapper {
+    margin-bottom: 60px;
+  }
+  .optionsWrapper {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 60px;
+  }
+  .filesWrapper {
+    height: 600px;
+    background-color: rebeccapurple;
+  }
+  .optionsColection {
+    overflow-x: visible;
+    margin-bottom: 20px;
+  }
+  .optionInputWrapper {
+    margin-top: 20px;
+  }
+  .documentsPreview {
+    display: flex;
+    justify-content: center;
+    margin-right: 0px;
+  }
+  .submitButtonWrapper {
+    height: 50px;
+    background-color: blanchedalmond;
+  }
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+  .optionWrapper h3 {
+    font-size: 1rem;
+  }
+  .optionWrapper {
+    min-width: 80px;
+  }
+  .optionsColection {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    overflow-x: auto;
+    gap: 10px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+}
